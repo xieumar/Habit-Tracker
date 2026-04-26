@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFF9F5;
+  --foreground: #433934;
+  --card-bg: #FFFFFF;
+  --card-border: #F1E6DE;
+  --primary: #F4A261;
+  --primary-foreground: #FFFFFF;
+  --accent: #FDF2E9;
+  --muted: #8D8179;
+  --level-1: #FFD8BA;
+  --level-2: #FBC297;
+  --level-3: #F4A261;
+  --level-4: #E76F51;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-orange: var(--primary);
+  --color-brand-cream: var(--background);
+  --color-brand-dark: var(--foreground);
+  --color-card: var(--card-bg);
+  --color-border: var(--card-border);
+  --color-muted-text: var(--muted);
+  --color-chart-1: var(--level-1);
+  --color-chart-2: var(--level-2);
+  --color-chart-3: var(--level-3);
+  --color-chart-4: var(--level-4);
+  --shadow-sunrise: 0 4px 20px -2px rgba(231, 111, 81, 0.05), 0 2px 8px -2px rgba(0, 0, 0, 0.03);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1C1917;
+    --foreground: #FDF2E9;
+    --card-bg: #292524;
+    --card-border: #44403C;
+    --muted: #A8A29E;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.range-pill {
+  @apply rounded-full bg-linear-to-r from-[var(--level-1)] to-[var(--level-3)];
 }
