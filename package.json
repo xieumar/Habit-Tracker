@@ -2,7 +2,7 @@
   "name": "habit-tracker",
   "version": "0.1.0",
   "private": true,
-"scripts": {
+  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -12,6 +12,7 @@
     "test": "npm run test:unit && npm run test:integration && npm run test:e2e"
   },
   "dependencies": {
+    "lucide-react": "^1.11.0",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
