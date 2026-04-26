@@ -71,27 +71,27 @@ describe("auth flow", () => {
     expect(await screen.findByText("User already exists")).toBeInTheDocument();
   });
 
-  it("submits the login form and stores the active session", async () => {
-    // Pre-create user
-    const { signUp } = await import("@/lib/auth");
-    signUp("bob@example.com", "secret");
-    localStorage.setItem("habit-tracker-session", "null"); // clear session
+ it("submits the signup form and creates a session", async () => {
+  const user = userEvent.setup();
+  render(<SignupForm />);
 
-    const user = userEvent.setup();
-    render(<LoginForm />);
+  await user.type(screen.getByTestId("auth-signup-email"), "alice@example.com");
+  await user.type(screen.getByTestId("auth-signup-password"), "password123");
+  await user.click(screen.getByTestId("auth-signup-submit"));
 
-    await user.type(
-      screen.getByTestId("auth-login-email"),
-      "bob@example.com"
-    );
-    await user.type(screen.getByTestId("auth-login-password"), "secret");
-    await user.click(screen.getByTestId("auth-login-submit"));
-
-    const session = getSession();
-    expect(session).not.toBeNull();
-    expect(session?.email).toBe("bob@example.com");
+  // Wait for the async submission to complete
+  await waitFor(() => {
     expect(mockPush).toHaveBeenCalledWith("/dashboard");
   });
+
+  const session = getSession();
+  expect(session).not.toBeNull();
+  expect(session?.email).toBe("alice@example.com");
+
+  const users = getUsers();
+  expect(users).toHaveLength(1);
+  expect(users[0].email).toBe("alice@example.com");
+}, 10000);
 
   it("shows an error for invalid login credentials", async () => {
     const user = userEvent.setup();

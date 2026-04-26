@@ -134,7 +134,7 @@ export default function DashboardPage() {
 
         <button
           onClick={() => setShowForm(true)}
-          data-testid="create-habit-button"
+          
           className="mt-auto w-full bg-brand-orange text-white py-3.5 rounded-2xl font-bold shadow-lg shadow-brand-orange/20 hover:bg-[#E78C4B] transition active:scale-95"
         >
           Log New Habit

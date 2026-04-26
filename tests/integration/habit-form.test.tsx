@@ -6,9 +6,17 @@ import type { Habit } from "@/types/habit";
 import type { Session } from "@/types/auth";
 
 // Mock next/navigation
-const mockReplace = vi.fn();
+const mockRouter = {
+  replace: vi.fn(),
+  push: vi.fn(),
+  prefetch: vi.fn(),
+  back: vi.fn(),
+};
+
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ replace: mockReplace, push: vi.fn() }),
+  useRouter: () => mockRouter,
+  usePathname: () => "/",
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 import DashboardPage from "@/app/dashboard/page";
@@ -47,7 +55,8 @@ function seedHabit(overrides: Partial<Habit> = {}): Habit {
 // Override Date to a fixed value so "today" is deterministic
 beforeEach(() => {
   localStorage.clear();
-  mockReplace.mockClear();
+  mockRouter.replace.mockClear();
+  mockRouter.push.mockClear();
 
   const fixedDate = new Date("2024-06-15T12:00:00.000Z");
   vi.setSystemTime(fixedDate);
@@ -60,11 +69,11 @@ afterEach(() => {
 describe("habit form", () => {
   it("shows a validation error when habit name is empty", async () => {
     seedSession();
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup();
     render(<DashboardPage />);
 
     // Open form
-    const createBtn = await screen.findByTestId("create-habit-button");
+    const createBtn = await screen.findByRole("button", { name: /Log New Habit/i });
     await user.click(createBtn);
 
     // Submit empty name
@@ -76,10 +85,10 @@ describe("habit form", () => {
 
   it("creates a new habit and renders it in the list", async () => {
     seedSession();
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup();
     render(<DashboardPage />);
 
-    const createBtn = await screen.findByTestId("create-habit-button");
+    const createBtn = await screen.findByRole("button", { name: /Log New Habit/i });
     await user.click(createBtn);
 
     await user.type(screen.getByTestId("habit-name-input"), "Drink Water");
@@ -97,7 +106,7 @@ describe("habit form", () => {
   it("edits an existing habit and preserves immutable fields", async () => {
     const original = seedHabit();
     seedSession();
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup();
     render(<DashboardPage />);
 
     const editBtn = await screen.findByTestId("habit-edit-drink-water");
@@ -127,7 +136,7 @@ describe("habit form", () => {
   it("deletes a habit only after explicit confirmation", async () => {
     seedHabit();
     seedSession();
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup();
     render(<DashboardPage />);
 
     const deleteBtn = await screen.findByTestId("habit-delete-drink-water");
@@ -148,7 +157,7 @@ describe("habit form", () => {
   it("toggles completion and updates the streak display", async () => {
     seedHabit({ completions: [] });
     seedSession();
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const user = userEvent.setup();
     render(<DashboardPage />);
 
     const streakEl = await screen.findByTestId("habit-streak-drink-water");
