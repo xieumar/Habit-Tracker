@@ -55,7 +55,7 @@ export default function HabitCard({
         </h3>
         
         <div className="flex items-center gap-2 text-xs font-semibold text-muted-text">
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1" data-testid={`habit-streak-${slug}`}>
             <Flame size={14} className={streak > 0 && !completed ? "text-brand-orange" : ""} />
             {streak} day streak
           </span>
@@ -67,6 +67,7 @@ export default function HabitCard({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => onDelete(habit)}
+                data-testid="confirm-delete-button"
                 className="px-3 py-1 bg-red-500 text-white text-[10px] uppercase tracking-wider font-bold rounded-lg"
               >
                 Delete
@@ -80,10 +81,18 @@ export default function HabitCard({
             </div>
           ) : (
             <>
-              <button onClick={() => onEdit(habit)} className="text-muted-text/60 hover:text-brand-orange transition-colors">
+              <button 
+                onClick={() => onEdit(habit)} 
+                data-testid={`habit-edit-${slug}`}
+                className="text-muted-text/60 hover:text-brand-orange transition-colors"
+              >
                 <Edit3 size={16} />
               </button>
-              <button onClick={() => setConfirmDelete(true)} className="text-muted-text/60 hover:text-red-500 transition-colors">
+              <button 
+                onClick={() => setConfirmDelete(true)} 
+                data-testid={`habit-delete-${slug}`}
+                className="text-muted-text/60 hover:text-red-500 transition-colors"
+              >
                 <Trash2 size={16} />
               </button>
             </>
@@ -94,6 +103,7 @@ export default function HabitCard({
       {/* Main Action Toggle */}
       <button
         onClick={() => onToggle(habit)}
+        data-testid={`habit-complete-${slug}`}
         className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
           completed
             ? "bg-muted-text text-white shadow-inner"

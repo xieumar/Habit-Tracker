@@ -134,6 +134,7 @@ export default function DashboardPage() {
 
         <button
           onClick={() => setShowForm(true)}
+          data-testid="create-habit-button"
           className="mt-auto w-full bg-brand-orange text-white py-3.5 rounded-2xl font-bold shadow-lg shadow-brand-orange/20 hover:bg-[#E78C4B] transition active:scale-95"
         >
           Log New Habit
@@ -264,6 +265,7 @@ export default function DashboardPage() {
             {/* Floating Action Button (Mobile Only) */}
             <button
               onClick={() => setShowForm(true)}
+              data-testid="create-habit-button"
               className="lg:hidden absolute bottom-4 right-4 w-14 h-14 bg-brand-orange text-white rounded-[1.25rem] flex items-center justify-center shadow-lg hover:bg-[#E78C4B] transition-colors active:scale-95"
             >
               <Plus size={28} strokeWidth={2.5} />

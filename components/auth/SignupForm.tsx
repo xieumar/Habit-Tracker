@@ -99,6 +99,7 @@ export default function SignupForm() {
                       onChange={(e) => setName(e.target.value)}
                       className="w-full border border-border rounded-2xl py-3.5 pl-11 pr-4 text-foreground bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange transition-all placeholder:text-muted-text/40"
                       placeholder="Jane Doe"
+                      data-testid="auth-signup-name"
                     />
                   </div>
                 </div>
@@ -119,6 +120,7 @@ export default function SignupForm() {
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full border border-border rounded-2xl py-3.5 pl-11 pr-4 text-foreground bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange transition-all placeholder:text-muted-text/40"
                       placeholder="name@example.com"
+                      data-testid="auth-signup-email"
                     />
                   </div>
                 </div>
@@ -139,6 +141,7 @@ export default function SignupForm() {
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full border border-border rounded-2xl py-3.5 pl-11 pr-4 text-foreground bg-transparent focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange transition-all placeholder:text-muted-text/40"
                       placeholder="••••••••"
+                      data-testid="auth-signup-password"
                     />
                   </div>
                 </div>
@@ -147,6 +150,7 @@ export default function SignupForm() {
                   type="submit"
                   disabled={loading}
                   className="w-full bg-brand-orange text-white font-semibold text-base py-3.5 rounded-2xl hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-2 shadow-md shadow-brand-orange/20 mt-2"
+                  data-testid="auth-signup-submit"
                 >
                   {loading ? "Creating Account..." : "Create Account"}
                   {!loading && <ArrowRight className="w-5 h-5" strokeWidth={2.5} />}

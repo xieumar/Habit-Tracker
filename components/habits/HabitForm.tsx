@@ -86,6 +86,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
                   placeholder="e.g., Morning Meditation"
                   maxLength={80}
                   autoFocus
+                  data-testid="habit-name-input"
                 />
                 <Edit2 className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-orange w-5 h-5 pointer-events-none" />
               </div>
@@ -126,6 +127,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
                   rows={2}
                   className="w-full bg-card border border-border rounded-2xl py-4 pl-12 pr-5 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange transition-all placeholder:text-muted-text/50 font-medium resize-none"
                   placeholder="Any details or specific times?"
+                  data-testid="habit-description-input"
                 />
               </div>
             </div>
@@ -159,6 +161,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
           <button
             type="submit"
             form="habit-form"
+            data-testid="habit-save-button"
             className="py-4 bg-brand-orange text-white rounded-2xl font-bold shadow-lg shadow-brand-orange/20 hover:bg-[#E78C4B] transition active:scale-95"
           >
             Save Habit
