@@ -3,7 +3,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Sun, Mail, Lock, ArrowRight, Activity, TrendingUp } from "lucide-react";
+import { Sun, Mail, Lock, ArrowRight } from "lucide-react";
 import { logIn } from "@/lib/auth"; 
 
 export default function LoginForm() {
@@ -19,13 +19,17 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-     
-      await new Promise((res) => setTimeout(res, 1000));
-    
+      const result = logIn(email, password);
+      
+      if (!result.success) {
+        setError(result.error);
+        setLoading(false);
+        return;
+      }
       
       router.push("/dashboard");
     } catch (err) {
-      setError("Invalid credentials. Please try again.");
+      setError("An unexpected error occurred. Please try again.");
       setLoading(false);
     }
   }
@@ -54,12 +58,10 @@ export default function LoginForm() {
           </div>
         </div>
 
-        {/* RIGHT SIDE: Mobile Full / Desktop Half */}
         <div className="w-full lg:w-1/2 flex flex-col items-center justify-center py-6 lg:py-16 lg:px-12 relative">
           
           <div className="w-full max-w-[360px] lg:max-w-md">
             
-            {/* Header Area */}
             <div className="text-center mb-8 lg:mb-10">
               <div className="inline-flex items-center justify-center mb-3 text-brand-orange">
                 <Sun className="w-10 h-10 lg:w-12 lg:h-12" strokeWidth={2} />
@@ -72,7 +74,6 @@ export default function LoginForm() {
               </p>
             </div>
 
-            {/* FORM CARD */}
             <div className="bg-card rounded-[2rem] shadow-sunrise lg:shadow-none p-6 sm:p-8 lg:p-0">
               <form onSubmit={handleSubmit} noValidate className="space-y-6">
                 {error && (
@@ -81,7 +82,6 @@ export default function LoginForm() {
                   </div>
                 )}
 
-                {/* Email Input */}
                 <div>
                   <label htmlFor="email" className="block text-xs font-semibold text-muted-text uppercase tracking-wider mb-2 ml-1">
                     Email Address
@@ -102,7 +102,6 @@ export default function LoginForm() {
                   </div>
                 </div>
 
-                {/* Password Input */}
                 <div>
                   <label htmlFor="password" className="block text-xs font-semibold text-muted-text uppercase tracking-wider mb-2 ml-1">
                     Password
@@ -123,7 +122,6 @@ export default function LoginForm() {
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -135,15 +133,12 @@ export default function LoginForm() {
               </form>
             </div>
 
-            {/* Footer Texts */}
             <p className="mt-8 text-center text-sm font-medium text-muted-text">
               Don't have an account?{" "}
               <Link href="/signup" className="text-brand-orange hover:underline">
                 Sign Up
               </Link>
             </p>
-
-          
 
           </div>
         </div>
