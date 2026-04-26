@@ -1,15 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  themeColor: "#FFF9F5",
+};
 
 export const metadata: Metadata = {
   title: "Habit Tracker",
-  description: "Build better habits, one day at a time",
+  description: "Quiet momentum starts here.",
   manifest: "/manifest.json",
-  themeColor: "#e85d2f",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Habit Tracker",
+    title: "Sunrise Habits",
   },
 };
 
@@ -28,11 +31,13 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className="bg-paper text-ink antialiased">{children}</body>
+      <body className="bg-background text-foreground antialiased font-sans">
+        {children}
+      </body>
     </html>
   );
 }
