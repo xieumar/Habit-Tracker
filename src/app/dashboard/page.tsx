@@ -128,6 +128,7 @@ function DashboardContent({ session }: { session: any }) {
               </div>
               <button 
                 onClick={() => setShowLogoutModal(true)}
+                data-testid="auth-logout-button"
                 className="px-6 h-12 bg-white border border-[#e6d5c5] rounded-2xl text-xs font-bold text-[#4a3a2e] hover:bg-[#ede1d5] hover:border-[#d4b9a1] transition-all shadow-sm active:scale-95"
               >
                 Logout
