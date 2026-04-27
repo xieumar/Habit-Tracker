@@ -143,7 +143,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex items-end">
                 <p className="text-white font-bold text-sm leading-tight text-center w-full">
-                  "The secret of your future is hidden in your daily routine."
+                  "The secret of your future is hidden in your daily routine. Small steps lead to great changes."
                 </p>
               </div>
             </div>
