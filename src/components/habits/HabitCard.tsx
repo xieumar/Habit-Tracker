@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Habit } from "@/types/habit";
 import { getHabitSlug } from "@/lib/slug";
 import { calculateCurrentStreak } from "@/lib/streaks";
-import { Check, Plus, Edit3, Trash2, Droplets, Flame } from "lucide-react";
+import { Check, Plus, Edit3, Trash2, Droplets, Flame, Sun } from "lucide-react";
 
 interface HabitCardProps {
   habit: Habit;
@@ -29,88 +29,110 @@ export default function HabitCard({
   return (
     <article
       data-testid={`habit-card-${slug}`}
-      className={`relative rounded-[2rem] p-5 transition-all duration-300 flex items-center gap-4 ${
+      className={`group relative rounded-[2.5rem] p-6 transition-all duration-500 flex flex-col sm:flex-row sm:items-center gap-6 ${
         completed
-          ? "bg-black/5 border border-transparent opacity-80"
-          : "bg-card shadow-sm border border-border"
+          ? "bg-[#e6d5c5] shadow-inner"
+          : "bg-[#ede1d5] shadow-sm hover:shadow-md hover:bg-[#e6d5c5]/80"
       }`}
     >
       {/* Icon Badge */}
       <div 
-        className={`w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
-          completed ? "bg-black/5 text-muted-text" : "bg-brand-orange/15 text-brand-orange"
+        className={`w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 ${
+          completed 
+            ? "bg-white text-brand-orange" 
+            : "bg-white text-[#d4b9a1] group-hover:text-brand-orange shadow-sm"
         }`}
       >
-        {streak > 5 ? <Flame strokeWidth={2.5} /> : <Droplets strokeWidth={2.5} />}
+        {habit.name.toLowerCase().includes('hydrate') || habit.name.toLowerCase().includes('water') ? (
+          <Droplets size={28} strokeWidth={2.5} />
+        ) : habit.name.toLowerCase().includes('meditate') || habit.name.toLowerCase().includes('zen') ? (
+          <Sun size={28} strokeWidth={2.5} />
+        ) : (
+          <Flame size={28} strokeWidth={2.5} />
+        )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 py-1">
-        <h3
-          className={`font-bold text-[1.1rem] truncate mb-1 transition-colors ${
-            completed ? "text-muted-text line-through decoration-muted-text/50" : "text-foreground"
-          }`}
-        >
-          {habit.name}
-        </h3>
-        
-        <div className="flex items-center gap-2 text-xs font-semibold text-muted-text">
-          <span className="flex items-center gap-1" data-testid={`habit-streak-${slug}`}>
-            <Flame size={14} className={streak > 0 && !completed ? "text-brand-orange" : ""} />
-            {streak} day streak
-          </span>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-3 mb-1">
+          <h3
+            className={`font-bold text-lg truncate transition-colors ${
+              completed ? "text-[#6d5b4b]" : "text-[#4a3a2e]"
+            }`}
+          >
+            {habit.name}
+          </h3>
+          
+          {/* Subtle Controls */}
+          <div className="flex items-center gap-2">
+            {confirmDelete ? (
+              <div className="flex items-center gap-2 animate-in fade-in zoom-in-95">
+                <button
+                  onClick={() => onDelete(habit)}
+                  data-testid="confirm-delete-button"
+                  className="px-3 py-1 bg-red-500 text-white text-[10px] uppercase tracking-wider font-bold rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="px-3 py-1 bg-white text-[#4a3a2e] text-[10px] uppercase tracking-wider font-bold rounded-lg hover:bg-[#f8f1eb] transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <div className="lg:opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
+                <button 
+                  onClick={() => onEdit(habit)} 
+                  data-testid={`habit-edit-${slug}`}
+                  className="p-1.5 text-[#b89a81] hover:text-brand-orange transition-colors"
+                >
+                  <Edit3 size={14} />
+                </button>
+                <button 
+                  onClick={() => setConfirmDelete(true)} 
+                  data-testid={`habit-delete-${slug}`}
+                  className="p-1.5 text-[#b89a81] hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+        
+        <p className="text-xs font-bold text-[#b89a81] uppercase tracking-wider mb-2">
+          {habit.description || `Goal: ${habit.frequency === 'daily' ? 'Once' : 'Multiple times'} / Day`}
+        </p>
 
-        {/* Edit / Delete Controls (Appear subtly under text) */}
-        <div className="flex items-center gap-3 mt-2.5">
-          {confirmDelete ? (
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onDelete(habit)}
-                data-testid="confirm-delete-button"
-                className="px-3 py-1 bg-red-500 text-white text-[10px] uppercase tracking-wider font-bold rounded-lg"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => setConfirmDelete(false)}
-                className="px-3 py-1 bg-black/5 text-foreground text-[10px] uppercase tracking-wider font-bold rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <>
-              <button 
-                onClick={() => onEdit(habit)} 
-                data-testid={`habit-edit-${slug}`}
-                className="text-muted-text/60 hover:text-brand-orange transition-colors"
-              >
-                <Edit3 size={16} />
-              </button>
-              <button 
-                onClick={() => setConfirmDelete(true)} 
-                data-testid={`habit-delete-${slug}`}
-                className="text-muted-text/60 hover:text-red-500 transition-colors"
-              >
-                <Trash2 size={16} />
-              </button>
-            </>
-          )}
+        <div className="flex items-center gap-2 text-[10px] font-bold text-brand-orange uppercase tracking-widest">
+          <Flame size={12} className={streak > 0 ? "fill-brand-orange" : ""} />
+          <span data-testid={`habit-streak-${slug}`}>{streak} Day Streak</span>
         </div>
       </div>
 
-      {/* Main Action Toggle */}
+      {/* Action Button */}
       <button
         onClick={() => onToggle(habit)}
         data-testid={`habit-complete-${slug}`}
-        className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+        className={`px-8 py-3.5 rounded-2xl flex items-center justify-center gap-2 font-bold text-sm transition-all duration-500 whitespace-nowrap ${
           completed
-            ? "bg-muted-text text-white shadow-inner"
-            : "border-[2.5px] border-brand-orange text-brand-orange hover:bg-brand-orange/10"
+            ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/20"
+            : "bg-white text-[#4a3a2e] hover:bg-brand-orange hover:text-white shadow-sm"
         }`}
       >
-        {completed ? <Check size={28} strokeWidth={3} /> : <Plus size={28} strokeWidth={3} />}
+        {completed ? (
+          <>
+            <Check size={18} strokeWidth={3} />
+            Completed
+          </>
+        ) : (
+          <>
+            <Plus size={18} strokeWidth={3} />
+            {habit.name.toLowerCase().includes('hydrate') ? 'Log Intake' : 'Mark Done'}
+          </>
+        )}
       </button>
     </article>
   );

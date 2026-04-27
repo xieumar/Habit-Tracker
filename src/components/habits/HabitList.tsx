@@ -31,18 +31,17 @@ export default function HabitList({
   }
 
   return (
-    <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="space-y-4">
       {habits.map((habit) => (
-        <li key={habit.id}>
-          <HabitCard
-            habit={habit}
-            today={today}
-            onToggle={onToggle}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        </li>
+        <HabitCard
+          key={habit.id}
+          habit={habit}
+          today={today}
+          onToggle={onToggle}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
-    </ul>
+    </div>
   );
 }
