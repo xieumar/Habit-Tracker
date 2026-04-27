@@ -25,7 +25,7 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }, [router]);
 
   if (loading || !session) {
-    return null; // Or a loading spinner
+    return null; 
   }
 
   return <>{children(session)}</>;

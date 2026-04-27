@@ -6,6 +6,8 @@ import { getHabitSlug } from "@/lib/slug";
 import { calculateCurrentStreak } from "@/lib/streaks";
 import { Check, Plus, Edit3, Trash2, Droplets, Flame, Sun } from "lucide-react";
 
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
+
 interface HabitCardProps {
   habit: Habit;
   today: string;
@@ -21,7 +23,7 @@ export default function HabitCard({
   onEdit,
   onDelete,
 }: HabitCardProps) {
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const slug = getHabitSlug(habit.name);
   const streak = calculateCurrentStreak(habit.completions, today);
   const completed = habit.completions.includes(today);
@@ -64,41 +66,21 @@ export default function HabitCard({
           </h3>
           
           {/* Subtle Controls */}
-          <div className="flex items-center gap-2">
-            {confirmDelete ? (
-              <div className="flex items-center gap-2 animate-in fade-in zoom-in-95">
-                <button
-                  onClick={() => onDelete(habit)}
-                  data-testid="confirm-delete-button"
-                  className="px-3 py-1 bg-red-500 text-white text-[10px] uppercase tracking-wider font-bold rounded-lg hover:bg-red-600 transition-colors"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={() => setConfirmDelete(false)}
-                  className="px-3 py-1 bg-white text-[#4a3a2e] text-[10px] uppercase tracking-wider font-bold rounded-lg hover:bg-[#f8f1eb] transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <div className="lg:opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
-                <button 
-                  onClick={() => onEdit(habit)} 
-                  data-testid={`habit-edit-${slug}`}
-                  className="p-1.5 text-[#b89a81] hover:text-brand-orange transition-colors"
-                >
-                  <Edit3 size={14} />
-                </button>
-                <button 
-                  onClick={() => setConfirmDelete(true)} 
-                  data-testid={`habit-delete-${slug}`}
-                  className="p-1.5 text-[#b89a81] hover:text-red-500 transition-colors"
-                >
-                  <Trash2 size={14} />
-                </button>
-              </div>
-            )}
+          <div className="lg:opacity-0 group-hover:opacity-100 flex items-center gap-2 transition-opacity">
+            <button 
+              onClick={() => onEdit(habit)} 
+              data-testid={`habit-edit-${slug}`}
+              className="p-1.5 text-[#b89a81] hover:text-brand-orange transition-colors"
+            >
+              <Edit3 size={14} />
+            </button>
+            <button 
+              onClick={() => setShowDeleteModal(true)} 
+              data-testid={`habit-delete-${slug}`}
+              className="p-1.5 text-[#b89a81] hover:text-red-500 transition-colors"
+            >
+              <Trash2 size={14} />
+            </button>
           </div>
         </div>
         
@@ -134,6 +116,20 @@ export default function HabitCard({
           </>
         )}
       </button>
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal 
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          onDelete(habit);
+          setShowDeleteModal(false);
+        }}
+        title="Delete Habit"
+        message={`Are you sure you want to delete "${habit.name}"? This action cannot be undone and you will lose your streak.`}
+        confirmLabel="Delete"
+        isDestructive={true}
+      />
     </article>
   );
 }

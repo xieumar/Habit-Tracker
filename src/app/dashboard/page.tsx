@@ -2,17 +2,18 @@
 
 import { useState, useCallback, useEffect } from "react";
 import {
-  Sun, Search, Bell, Calendar, Plus, TrendingUp,
-  LayoutDashboard, ListTodo, BarChart3, Users, Settings
+  Sun, Search, Bell, Calendar as CalendarIcon, Plus, TrendingUp,
+  Flame, ArrowLeft, LayoutDashboard, ListTodo, BarChart3, Users, Settings
 } from "lucide-react";
 import type { Habit } from "@/types/habit";
 import HabitForm from "@/components/habits/HabitForm";
 import HabitList from "@/components/habits/HabitList";
 import ProtectedRoute from "@/components/shared/ProtectedRoute";
-import { getHabitsForUser, saveHabits, getHabits } from "@/lib/storage";
+import { useRouter } from "next/navigation";
+import { saveSession, getHabitsForUser, saveHabits, getHabits } from "@/lib/storage";
 import { logOut } from "@/lib/auth";
 import { toggleHabitCompletion } from "@/lib/habits"; 
-
+import ConfirmationModal from "@/components/shared/ConfirmationModal";
 function getToday(): string {
   return new Date().toISOString().slice(0, 10);
 }
@@ -31,6 +32,8 @@ function DashboardContent({ session }: { session: any }) {
   const [today] = useState(getToday);
   const [showForm, setShowForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setHabits(getHabitsForUser(session.userId));
@@ -82,8 +85,8 @@ function DashboardContent({ session }: { session: any }) {
   }
 
   function handleLogout() {
-    logOut();
-    window.location.href = "/login";
+    saveSession(null);
+    router.push("/login");
   }
 
   const completionRate = habits.length > 0 
@@ -91,7 +94,7 @@ function DashboardContent({ session }: { session: any }) {
     : 0;
 
   return (
-    <div data-testid="dashboard-page" className="bg-[#f8f1eb] min-h-screen font-sans">
+    <div data-testid="dashboard-page" className="bg-[#f8f1eb] min-h-screen font-sans pb-20">
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-10">
         
         {/* Header Section */}
@@ -109,31 +112,25 @@ function DashboardContent({ session }: { session: any }) {
             />
           </div>
           
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4 text-[#6d5b4b]">
-              <button className="p-2.5 bg-white/60 rounded-xl hover:bg-white transition-colors">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 text-[#6d5b4b]">
+              <button className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center hover:bg-white transition-all shadow-sm active:scale-95">
                 <Bell className="w-5 h-5" />
               </button>
-              <button className="p-2.5 bg-white/60 rounded-xl hover:bg-white transition-colors">
-                <Calendar className="w-5 h-5" />
+              <button className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center hover:bg-white transition-all shadow-sm active:scale-95">
+                <CalendarIcon className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="h-10 w-[1px] bg-[#e6d5c5] hidden md:block" />
-            
-            <div className="flex items-center gap-3">
-              <div className="text-right hidden sm:block">
-                <p className="text-sm font-bold text-[#4a3a2e]">Hello, {session?.email?.split('@')[0] ?? "Alex"}</p>
-                <p className="text-[10px] font-bold text-[#b89a81] uppercase tracking-wider">
-                  {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                </p>
+            <div className="flex items-center gap-3 pl-5 border-l border-[#e6d5c5]">
+              <div className="w-12 h-12 rounded-2xl bg-[#4a3a2e] flex items-center justify-center text-white font-bold shadow-lg">
+                {session.email[0].toUpperCase()}
               </div>
               <button 
-                onClick={handleLogout}
-                className="w-11 h-11 rounded-2xl bg-brand-orange flex items-center justify-center text-white font-bold shadow-lg shadow-brand-orange/20 hover:scale-105 transition-transform"
-                title="Sign Out"
+                onClick={() => setShowLogoutModal(true)}
+                className="px-6 h-12 bg-white border border-[#e6d5c5] rounded-2xl text-xs font-bold text-[#4a3a2e] hover:bg-[#ede1d5] hover:border-[#d4b9a1] transition-all shadow-sm active:scale-95"
               >
-                {session?.email?.charAt(0).toUpperCase() ?? "U"}
+                Logout
               </button>
             </div>
           </div>
@@ -148,9 +145,9 @@ function DashboardContent({ session }: { session: any }) {
                 <h2 className="text-xl font-bold text-[#4a3a2e]">Today's Focus</h2>
                 <button 
                   onClick={() => setShowForm(true)}
-                  className="text-xs font-bold text-brand-orange hover:underline uppercase tracking-wider flex items-center gap-1"
+                  className="px-8 py-3.5 bg-brand-orange text-white rounded-2xl text-xs font-bold uppercase tracking-widest shadow-lg shadow-brand-orange/20 hover:opacity-90 active:scale-95 transition-all flex items-center gap-2"
                 >
-                  <Plus size={14} strokeWidth={3} /> Log New Habit
+                  <Plus size={18} strokeWidth={3} /> Log New Habit
                 </button>
               </div>
 
@@ -273,6 +270,15 @@ function DashboardContent({ session }: { session: any }) {
           }}
         />
       ) : null}
+
+      <ConfirmationModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Sign Out"
+        message="Are you sure you want to log out? You'll need to sign back in to track your habits."
+        confirmLabel="Logout"
+      />
     </div>
   );
 }
