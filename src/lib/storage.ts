@@ -1,11 +1,6 @@
 import type { User, Session } from "@/types/auth";
 import type { Habit } from "@/types/habit";
-
-export const STORAGE_KEYS = {
-  USERS: "habit-tracker-users",
-  SESSION: "habit-tracker-session",
-  HABITS: "habit-tracker-habits",
-} as const;
+import { STORAGE_KEYS } from "./constants";
 
 export function getUsers(): User[] {
   try {

@@ -1,7 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import { getSession, getUsers } from "@/lib/storage";
+
+if (typeof crypto === "undefined") {
+  (global as any).crypto = {
+    randomUUID: () => "test-uuid-" + Math.random(),
+  };
+}
 
 // Mock next/navigation
 const mockPush = vi.fn();

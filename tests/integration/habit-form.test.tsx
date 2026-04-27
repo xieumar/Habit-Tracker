@@ -1,9 +1,16 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, within, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import { saveSession, saveHabits, saveUsers } from "@/lib/storage";
 import type { Habit } from "@/types/habit";
 import type { Session } from "@/types/auth";
+
+if (typeof crypto === "undefined") {
+  (global as any).crypto = {
+    randomUUID: () => "test-uuid-" + Math.random(),
+  };
+}
 
 // Mock next/navigation
 const mockRouter = {

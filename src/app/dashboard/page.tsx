@@ -1,55 +1,50 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useEffect } from "react";
 import {
   Sun, Search, Bell, Calendar, Plus, TrendingUp,
   LayoutDashboard, ListTodo, BarChart3, Users, Settings
 } from "lucide-react";
 import type { Habit } from "@/types/habit";
-import type { Session } from "@/types/auth";
-import HabitCard from "@/components/habits/HabitCard";
 import HabitForm from "@/components/habits/HabitForm";
-import { getSession, getHabitsForUser, saveHabits, getHabits } from "@/lib/storage";
+import HabitList from "@/components/habits/HabitList";
+import ProtectedRoute from "@/components/shared/ProtectedRoute";
+import { getHabitsForUser, saveHabits, getHabits } from "@/lib/storage";
 import { logOut } from "@/lib/auth";
-import { toggleHabitCompletion } from "@/lib/habit"; 
+import { toggleHabitCompletion } from "@/lib/habits"; 
 
 function getToday(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
+  return (
+    <ProtectedRoute>
+      {(session) => <DashboardContent session={session} />}
+    </ProtectedRoute>
+  );
+}
+
+function DashboardContent({ session }: { session: any }) {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [today] = useState(getToday);
   const [showForm, setShowForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const s = getSession();
-    if (!s) {
-      router.replace("/login");
-      return;
-    }
-    setSession(s);
-    setHabits(getHabitsForUser(s.userId));
-    setMounted(true);
-  }, [router]);
+    setHabits(getHabitsForUser(session.userId));
+  }, [session.userId]);
 
   const persistHabits = useCallback(
     (updated: Habit[]) => {
-      if (!session) return;
       const all = getHabits().filter((h) => h.userId !== session.userId);
       saveHabits([...all, ...updated]);
       setHabits(updated);
     },
-    [session]
+    [session.userId]
   );
 
   function handleCreate(data: { name: string; description: string; frequency: "daily" }) {
-    if (!session) return;
     const newHabit: Habit = {
       id: crypto.randomUUID(),
       userId: session.userId,
@@ -87,10 +82,8 @@ export default function DashboardPage() {
 
   function handleLogout() {
     logOut();
-    router.replace("/login");
+    window.location.href = "/login";
   }
-
-  if (!mounted) return null;
 
   const activeForm = showForm || editingHabit !== null;
 
@@ -128,12 +121,6 @@ export default function DashboardPage() {
           ))}
         </nav>
 
-        {/*
-          ✅ CANONICAL create-habit-button
-          - Lives in the sidebar, always rendered on desktop (no lg:hidden)
-          - Playwright runs at desktop viewport so this is what it finds
-          - Only ONE element with this testid exists at desktop width
-        */}
         <button
           data-testid="create-habit-button"
           onClick={() => setShowForm(true)}
@@ -166,7 +153,6 @@ export default function DashboardPage() {
             <div className="flex items-center gap-3 lg:gap-5 text-muted-text">
               <button className="hidden lg:block hover:text-foreground transition"><Bell size={20} /></button>
               <button className="hidden lg:block hover:text-foreground transition"><Calendar size={20} /></button>
-              {/* ✅ required testid */}
               <button
                 data-testid="auth-logout-button"
                 onClick={handleLogout}
@@ -181,7 +167,6 @@ export default function DashboardPage() {
 
         <main className="w-full max-w-md lg:max-w-5xl mx-auto px-6 py-4 lg:py-8 space-y-8 flex-1">
 
-          {/* Date row with mobile create button (no testid — sidebar is canonical) */}
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-muted-text text-sm font-medium mb-1">
@@ -191,7 +176,6 @@ export default function DashboardPage() {
               </p>
               <h1 className="text-3xl font-bold text-foreground">Today's Focus</h1>
             </div>
-            {/* Mobile-only button — no testid to avoid duplicate conflicts */}
             <button
               onClick={() => setShowForm(true)}
               aria-label="New habit"
@@ -233,32 +217,14 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* ✅ Empty state with required testid */}
-          {habits.length === 0 ? (
-            <div
-              data-testid="empty-state"
-              className="text-center py-12 px-6 border-2 border-dashed border-border rounded-[2rem]"
-            >
-              <p className="text-lg font-bold text-foreground mb-2">No habits yet</p>
-              <p className="text-sm text-muted-text mb-6">Create your first positive ritual.</p>
-            </div>
-          ) : (
-            <ul className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {habits.map((habit) => (
-                <li key={habit.id}>
-                  <HabitCard
-                    habit={habit}
-                    today={today}
-                    onToggle={handleToggle}
-                    onEdit={(h) => setEditingHabit(h)}
-                    onDelete={handleDelete}
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
+          <HabitList 
+            habits={habits}
+            today={today}
+            onToggle={handleToggle}
+            onEdit={(h) => setEditingHabit(h)}
+            onDelete={handleDelete}
+          />
 
-          {/* Inspirational card — FAB removed, no more hidden buttons inside */}
           <div className="relative rounded-[2rem] overflow-hidden h-40 lg:h-56 shadow-sm border border-border group">
             <img
               src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop"
@@ -275,7 +241,6 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      {/* Form overlay */}
       {activeForm && (
         <HabitForm
           initial={editingHabit || undefined}

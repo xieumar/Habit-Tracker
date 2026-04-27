@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { toggleHabitCompletion } from "@/lib/habit";
+import { toggleHabitCompletion } from "@/lib/habits";
 import type { Habit } from "@/types/habit";
 
 function makeHabit(overrides: Partial<Habit> = {}): Habit {
