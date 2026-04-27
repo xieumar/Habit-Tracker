@@ -27,6 +27,7 @@ export default function DashboardPage() {
 
 function DashboardContent({ session }: { session: any }) {
   const [habits, setHabits] = useState<Habit[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [today] = useState(getToday);
   const [showForm, setShowForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | null>(null);
@@ -96,13 +97,15 @@ function DashboardContent({ session }: { session: any }) {
         {/* Header Section */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
           <div className="relative flex-1 max-w-xl">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#d4b9a1]">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-text/60">
               <Search className="w-5 h-5" />
             </div>
             <input 
               type="text" 
               placeholder="Search habits or goals..." 
-              className="w-full bg-white/60 border-none rounded-2xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-brand-orange/20 text-[#6d5b4b] placeholder:text-[#d4b9a1] shadow-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full border border-border rounded-2xl py-3.5 pl-11 pr-5 text-foreground bg-white/60 focus:outline-none focus:ring-2 focus:ring-brand-orange/50 focus:border-brand-orange transition-all placeholder:text-muted-text/30 shadow-sm"
             />
           </div>
           
@@ -152,7 +155,10 @@ function DashboardContent({ session }: { session: any }) {
               </div>
 
               <HabitList 
-                habits={habits}
+                habits={habits.filter(h => 
+                  h.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                  h.description.toLowerCase().includes(searchQuery.toLowerCase())
+                )}
                 today={today}
                 onToggle={handleToggle}
                 onEdit={setEditingHabit}
