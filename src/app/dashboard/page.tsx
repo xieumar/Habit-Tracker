@@ -112,24 +112,24 @@ function DashboardContent({ session }: { session: any }) {
             />
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3 text-[#6d5b4b]">
-              <button className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center hover:bg-white transition-all shadow-sm active:scale-95">
-                <Bell className="w-5 h-5" />
+          <div className="flex items-center justify-between md:justify-end gap-2 sm:gap-4 w-full md:w-auto">
+            <div className="flex items-center gap-2 sm:gap-3 text-[#6d5b4b]">
+              <button className="w-10 h-10 sm:w-12 sm:h-12 bg-white/60 rounded-2xl flex items-center justify-center hover:bg-white transition-all shadow-sm active:scale-95">
+                <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
-              <button className="w-12 h-12 bg-white/60 rounded-2xl flex items-center justify-center hover:bg-white transition-all shadow-sm active:scale-95">
-                <CalendarIcon className="w-5 h-5" />
+              <button className="w-10 h-10 sm:w-12 sm:h-12 bg-white/60 rounded-2xl flex items-center justify-center hover:bg-white transition-all shadow-sm active:scale-95">
+                <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
             
-            <div className="flex items-center gap-3 pl-5 border-l border-[#e6d5c5]">
-              <div className="w-12 h-12 rounded-2xl bg-[#4a3a2e] flex items-center justify-center text-white font-bold shadow-lg">
+            <div className="flex items-center gap-2 sm:gap-3 pl-3 sm:pl-5 border-l border-[#e6d5c5]">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#4a3a2e] flex items-center justify-center text-white font-bold shadow-lg text-sm sm:text-base">
                 {session.email[0].toUpperCase()}
               </div>
               <button 
                 onClick={() => setShowLogoutModal(true)}
                 data-testid="auth-logout-button"
-                className="px-6 h-12 bg-white border border-[#e6d5c5] rounded-2xl text-xs font-bold text-[#4a3a2e] hover:bg-[#ede1d5] hover:border-[#d4b9a1] transition-all shadow-sm active:scale-95"
+                className="px-3 sm:px-6 h-10 sm:h-12 bg-white border border-[#e6d5c5] rounded-2xl text-[10px] sm:text-xs font-bold text-[#4a3a2e] hover:bg-[#ede1d5] hover:border-[#d4b9a1] transition-all shadow-sm active:scale-95 whitespace-nowrap"
               >
                 Logout
               </button>
