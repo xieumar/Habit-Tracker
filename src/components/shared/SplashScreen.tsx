@@ -5,7 +5,7 @@ export default function SplashScreen() {
     <div
       data-testid="splash-screen"
       className="fixed inset-0 flex flex-col items-center justify-center bg-background"
-      aria-label="Loading Sunrise Habits"
+      aria-label="Loading Habit Tracker"
     >
       {/* Animated rings / Sun effect */}
       <div className="relative flex items-center justify-center mb-8">
@@ -30,7 +30,7 @@ export default function SplashScreen() {
       </div>
 
       <h1 className="font-sans text-4xl font-bold tracking-tight text-foreground">
-        Sunrise Habits
+        Habit Tracker
       </h1>
       <p className="mt-2 font-sans text-sm text-muted-text tracking-widest uppercase">
         Rise and shine

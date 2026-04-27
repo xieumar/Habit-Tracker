@@ -67,7 +67,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
             </p>
           </div>
 
-          <form id="habit-form" onSubmit={handleSubmit} noValidate className="space-y-6">
+          <form id="habit-form" data-testid="habit-form" onSubmit={handleSubmit} noValidate className="space-y-6">
             
             {/* Habit Name */}
             <div>
@@ -100,7 +100,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
               <label className="block text-xs font-bold text-muted-text uppercase tracking-wider mb-2 ml-1">
                 Frequency
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3" data-testid="habit-frequency-select">
                 <button type="button" className="py-4 border-2 border-brand-orange bg-brand-orange/5 text-brand-orange font-bold rounded-2xl flex flex-col items-center gap-1">
                   <CalendarIcon size={20} />
                   Daily
