@@ -71,11 +71,12 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
             
             {/* Habit Name */}
             <div>
-              <label className="block text-xs font-bold text-muted-text uppercase tracking-wider mb-2 ml-1">
+              <label htmlFor="habit-name" className="block text-xs font-bold text-muted-text uppercase tracking-wider mb-2 ml-1">
                 Habit Name
               </label>
               <div className="relative">
                 <input
+                  id="habit-name"
                   type="text"
                   value={name}
                   onChange={(e) => {
@@ -114,7 +115,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
 
             {/* Description / Notes */}
             <div>
-              <label className="block text-xs font-bold text-muted-text uppercase tracking-wider mb-2 ml-1">
+              <label htmlFor="habit-description" className="block text-xs font-bold text-muted-text uppercase tracking-wider mb-2 ml-1">
                 Reminder Notes
               </label>
               <div className="relative">
@@ -122,6 +123,7 @@ export default function HabitForm({ initial, onSave, onCancel }: HabitFormProps)
                   <Bell size={20} />
                 </div>
                 <textarea
+                  id="habit-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={2}

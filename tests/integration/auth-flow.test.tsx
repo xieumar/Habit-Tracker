@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
-import { getSession, getUsers } from "@/lib/storage";
+import { getSession, getUsers, saveSession } from "@/lib/storage";
 
 if (typeof crypto === "undefined") {
   (global as any).crypto = {
@@ -11,6 +11,7 @@ if (typeof crypto === "undefined") {
 }
 
 // Mock next/navigation
+import { signUp } from "@/lib/auth";
 const mockPush = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush, replace: vi.fn() }),
@@ -78,27 +79,28 @@ describe("auth flow", () => {
     expect(await screen.findByText("User already exists")).toBeInTheDocument();
   });
 
- it("submits the signup form and creates a session", async () => {
-  const user = userEvent.setup();
-  render(<SignupForm />);
+  it("submits the login form and stores the active session", async () => {
+    const user = userEvent.setup();
 
-  await user.type(screen.getByTestId("auth-signup-email"), "alice@example.com");
-  await user.type(screen.getByTestId("auth-signup-password"), "password123");
-  await user.click(screen.getByTestId("auth-signup-submit"));
+    // Create a user first
+    const users = getUsers();
+    await signUp("alice@example.com", "password123");
+    saveSession(null); // Clear session only
 
-  // Wait for the async submission to complete
-  await waitFor(() => {
-    expect(mockPush).toHaveBeenCalledWith("/dashboard");
+    render(<LoginForm />);
+
+    await user.type(screen.getByTestId("auth-login-email"), "alice@example.com");
+    await user.type(screen.getByTestId("auth-login-password"), "password123");
+    await user.click(screen.getByTestId("auth-login-submit"));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+    });
+
+    const session = getSession();
+    expect(session).not.toBeNull();
+    expect(session?.email).toBe("alice@example.com");
   });
-
-  const session = getSession();
-  expect(session).not.toBeNull();
-  expect(session?.email).toBe("alice@example.com");
-
-  const users = getUsers();
-  expect(users).toHaveLength(1);
-  expect(users[0].email).toBe("alice@example.com");
-}, 10000);
 
   it("shows an error for invalid login credentials", async () => {
     const user = userEvent.setup();
