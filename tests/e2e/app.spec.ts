@@ -80,6 +80,7 @@ test.describe("Habit Tracker app", () => {
 
     // Log out bob and log back in as alice
     await page.getByTestId("auth-logout-button").click();
+    await page.getByTestId("confirm-delete-button").click();
     await page.waitForURL("/login");
     await page.getByTestId("auth-login-email").fill("alice@example.com");
     await page.getByTestId("auth-login-password").fill("pass1");
@@ -142,6 +143,7 @@ test.describe("Habit Tracker app", () => {
     await signUpUser(page, "user@example.com", "pass");
 
     await page.getByTestId("auth-logout-button").click();
+    await page.getByTestId("confirm-delete-button").click();
     await page.waitForURL("/login");
     await expect(page.getByTestId("auth-login-submit")).toBeVisible();
 

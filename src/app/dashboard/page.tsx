@@ -146,6 +146,7 @@ function DashboardContent({ session }: { session: any }) {
                 <h2 className="text-xl font-bold text-[#4a3a2e]">Today's Focus</h2>
                 <button 
                   onClick={() => setShowForm(true)}
+                  data-testid="create-habit-button"
                   className="px-8 py-3.5 bg-brand-orange text-white rounded-2xl text-xs font-bold uppercase tracking-widest shadow-lg shadow-brand-orange/20 hover:opacity-90 active:scale-95 transition-all flex items-center gap-2"
                 >
                   <Plus size={18} strokeWidth={3} /> Log New Habit
@@ -253,7 +254,6 @@ function DashboardContent({ session }: { session: any }) {
             <button 
               onClick={() => setShowForm(true)}
               className="lg:hidden fixed bottom-6 right-6 w-14 h-14 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center active:scale-95 transition-transform z-40"
-              data-testid="create-habit-button"
             >
               <Plus size={28} />
             </button>
