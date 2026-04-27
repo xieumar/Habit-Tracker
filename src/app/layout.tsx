@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const viewport: Viewport = {
-  themeColor: "#FFF9F5",
+  themeColor: "#e85d2f",
 };
 
 export const metadata: Metadata = {
@@ -12,7 +12,10 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Sunrise Habits",
+    title: "Habit Tracker",
+  },
+  other: {
+    "mobile-web-app-capable": "yes",
   },
 };
 
